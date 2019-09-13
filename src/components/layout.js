@@ -1,7 +1,7 @@
 import React from "react"
 import Aux from "../hoc/auxiliary"
 import { useStaticQuery, graphql } from "gatsby"
-
+import Footer from "./Footer/Footer"
 import Header from "./header/header"
 import "../index.css"
 
@@ -19,9 +19,8 @@ const Layout = ({ children }) => {
   return (
     <Aux>
       <Header />
-
       <main>{children}</main>
-      <footer></footer>
+      <Footer />
     </Aux>
   )
 }

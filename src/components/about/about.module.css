@@ -1,0 +1,29 @@
+div {
+  text-align: center;
+  color: #fff;
+}
+.h1 {
+  font-size: 130%;
+  text-align: center;
+  margin-left: 27%;
+}
+ol {
+  font-size: 110%;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 90%;
+}
+@media only screen and (max-width: 846px) {
+  .h1 {
+    font-size: 110%;
+    margin-left: 0%;
+  }
+  p {
+    font-size: 80%;
+  }
+  ol {
+    font-size: 80%;
+  }
+}

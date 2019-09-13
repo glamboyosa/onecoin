@@ -8,20 +8,31 @@ class Index extends Component {
     loading: true,
     usd: [],
     pounds: [],
+    kraken: [],
   }
   componentDidMount() {
     axios
-      .get("https://api.coindesk.com/v1/bpi/currentprice.json")
-      .then(resp => {
-        const array = []
-        this.setState({
-          loading: false,
-          euro: array.concat(resp.data.bpi.EUR),
-          usd: array.concat(resp.data.bpi.USD),
-          pounds: array.concat(resp.data.bpi.GBP),
+      .all([
+        axios.get("https://api.coindesk.com/v1/bpi/currentprice.json"),
+        axios.get(
+          "https://cors-anywhere.herokuapp.com/https://api.kraken.com/0/public/Assets"
+        ),
+      ])
+      .then(
+        axios.spread((coinDeskRes, krakenRes) => {
+          // do something with both responses
+          console.log(coinDeskRes.data)
+          console.log(krakenRes.data.result)
+          const array = []
+          this.setState({
+            loading: false,
+            euro: array.concat(coinDeskRes.data.bpi.EUR),
+            usd: array.concat(coinDeskRes.data.bpi.USD),
+            pounds: array.concat(coinDeskRes.data.bpi.GBP),
+            kraken: array.concat(krakenRes.data.result),
+          })
         })
-      })
-      .catch(error => console.error(error.message))
+      )
   }
   render() {
     let data = (
@@ -36,26 +47,189 @@ class Index extends Component {
             </tr>
 
             {this.state.euro.map(el => (
-              <tr>
+              <tr key={el.code}>
                 <td>{el.code}</td>
                 <td>&euro;</td>
                 <td>&euro;{el.rate_float.toFixed(2)}</td>
               </tr>
             ))}
             {this.state.usd.map(el => (
-              <tr>
+              <tr key={el.code}>
                 <td>{el.code}</td>
                 <td>&#36;</td>
                 <td>&#36;{el.rate_float.toFixed(2)}</td>
               </tr>
             ))}
             {this.state.pounds.map(el => (
-              <tr>
+              <tr key={el.code}>
                 <td>{el.code}</td>
                 <td>&pound;</td>
                 <td>&pound;{`${el.rate_float.toFixed(2)}`}</td>
               </tr>
             ))}
+          </tbody>
+        </table>
+        <h2 style={{ color: "#fff" }}>Tradable Assets</h2>
+        <table style={{ marginTop: "20px" }}>
+          <tbody>
+            <tr>
+              <th>Asset Class</th>
+              <th>Asset</th>
+              <th>Decimal Percentage</th>
+            </tr>
+            {this.state.kraken.map(el => {
+              return (
+                <tr key={el.ATOM.altname}>
+                  <td>{el.ATOM.aclass}</td>
+                  <td>{el.ATOM.altname}</td>
+                  {el.ATOM.display_decimals < 5 ? (
+                    <td
+                      style={{ color: "red" }}
+                    >{`${el.ATOM.display_decimals}%`}</td>
+                  ) : (
+                    <td style={{ color: "green" }}>
+                      {`${el.ATOM.display_decimals}%`}
+                    </td>
+                  )}
+                </tr>
+              )
+            })}
+            {this.state.kraken.map(el => {
+              return (
+                <tr key={el.BAT.altname}>
+                  <td>{el.BAT.aclass}</td>
+                  <td>{el.BAT.altname}</td>
+                  {el.BAT.display_decimals < 5 ? (
+                    <td
+                      style={{ color: "red" }}
+                    >{`${el.BAT.display_decimals}%`}</td>
+                  ) : (
+                    <td style={{ color: "green" }}>
+                      {`${el.BAT.display_decimals}%`}
+                    </td>
+                  )}
+                </tr>
+              )
+            })}
+            {this.state.kraken.map(el => {
+              return (
+                <tr key={el.ADA.altname}>
+                  <td>{el.ADA.aclass}</td>
+                  <td>{el.ADA.altname}</td>
+                  {el.ADA.display_decimals < 5 ? (
+                    <td
+                      style={{ color: "red" }}
+                    >{`${el.ADA.display_decimals}%`}</td>
+                  ) : (
+                    <td style={{ color: "green" }}>
+                      {`${el.ADA.display_decimals}%`}
+                    </td>
+                  )}
+                </tr>
+              )
+            })}
+            {this.state.kraken.map(el => {
+              return (
+                <tr key={el.BCH.altname}>
+                  <td>{el.BCH.aclass}</td>
+                  <td>{el.BCH.altname}</td>
+                  {el.BCH.display_decimals < 5 ? (
+                    <td
+                      style={{ color: "red" }}
+                    >{`${el.BCH.display_decimals}%`}</td>
+                  ) : (
+                    <td style={{ color: "green" }}>
+                      {`${el.BCH.display_decimals}%`}
+                    </td>
+                  )}
+                </tr>
+              )
+            })}
+            {this.state.kraken.map(el => {
+              return (
+                <tr key={el.BSV.altname}>
+                  <td>{el.BSV.aclass}</td>
+                  <td>{el.BSV.altname}</td>
+                  {el.BSV.display_decimals < 5 ? (
+                    <td
+                      style={{ color: "red" }}
+                    >{`${el.BSV.display_decimals}%`}</td>
+                  ) : (
+                    <td style={{ color: "green" }}>
+                      {`${el.BSV.display_decimals}%`}
+                    </td>
+                  )}
+                </tr>
+              )
+            })}
+            {this.state.kraken.map(el => {
+              return (
+                <tr key={el.DASH.altname}>
+                  <td>{el.DASH.aclass}</td>
+                  <td>{el.DASH.altname}</td>
+                  {el.DASH.display_decimals < 5 ? (
+                    <td
+                      style={{ color: "red" }}
+                    >{`${el.DASH.display_decimals}%`}</td>
+                  ) : (
+                    <td style={{ color: "green" }}>
+                      {`${el.DASH.display_decimals}%`}
+                    </td>
+                  )}
+                </tr>
+              )
+            })}
+            {this.state.kraken.map(el => {
+              return (
+                <tr key={el.EOS.altname}>
+                  <td>{el.EOS.aclass}</td>
+                  <td>{el.EOS.altname}</td>
+                  {el.EOS.display_decimals < 5 ? (
+                    <td
+                      style={{ color: "red" }}
+                    >{`${el.EOS.display_decimals}%`}</td>
+                  ) : (
+                    <td style={{ color: "green" }}>
+                      {`${el.EOS.display_decimals}%`}
+                    </td>
+                  )}
+                </tr>
+              )
+            })}
+            {this.state.kraken.map(el => {
+              return (
+                <tr key={el.GNO.altname}>
+                  <td>{el.GNO.aclass}</td>
+                  <td>{el.GNO.altname}</td>
+                  {el.GNO.display_decimals < 5 ? (
+                    <td
+                      style={{ color: "red" }}
+                    >{`${el.GNO.display_decimals}%`}</td>
+                  ) : (
+                    <td style={{ color: "green" }}>
+                      {`${el.GNO.display_decimals}%`}
+                    </td>
+                  )}
+                </tr>
+              )
+            })}
+            {this.state.kraken.map(el => {
+              return (
+                <tr key={el.ICX.altname}>
+                  <td>{el.ICX.aclass}</td>
+                  <td>{el.ICX.altname}</td>
+                  {el.ICX.display_decimals < 5 ? (
+                    <td
+                      style={{ color: "red" }}
+                    >{`${el.ICX.display_decimals}%`}</td>
+                  ) : (
+                    <td style={{ color: "green" }}>
+                      {`${el.ICX.display_decimals}%`}
+                    </td>
+                  )}
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
